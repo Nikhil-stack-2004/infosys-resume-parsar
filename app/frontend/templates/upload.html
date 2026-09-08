@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Upload Resume | AI Career Intelligence{% endblock %}
+{% block content %}
+<main class="container page-section narrow-page"><p class="eyebrow">STEP 01 / RESUME INTAKE</p><h1>Upload your resume</h1><p class="page-intro">Start your analysis with a PDF resume. The next page will show the extracted profile and predicted career roles.</p><form action="{{ url_for('upload_page') }}" method="POST" enctype="multipart/form-data" class="upload-panel"><label for="resume" class="upload-dropzone"><span class="upload-icon">↑</span><strong>Choose a PDF resume</strong><span>Accepted format: PDF</span></label><input id="resume" type="file" name="resume" accept=".pdf,application/pdf" required><button type="submit" class="btn btn-primary btn-lg">Analyze resume</button></form></main>
+{% endblock %}

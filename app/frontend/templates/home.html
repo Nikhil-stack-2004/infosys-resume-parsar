@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Home | AI Career Intelligence{% endblock %}
+{% block content %}
+<main>
+    <section class="hero"><div class="container"><p class="eyebrow">CAREER INTELLIGENCE, IN THREE STEPS</p><h1>Turn your resume into a clearer career direction.</h1><p class="lead">Upload a PDF resume to extract your profile, predict suitable roles, and discover the skills that can move you forward.</p><a href="{{ url_for('upload_page') }}" class="btn btn-light btn-lg">Upload your resume</a></div></section>
+    <section class="container page-section"><div class="section-heading"><p class="eyebrow">HOW IT WORKS</p><h2>One focused step at a time</h2></div><div class="row g-4"><div class="col-md-4"><article class="process-card"><span>01</span><h3>Extract</h3><p>We identify contact details, education, experience, and skills from your resume.</p></article></div><div class="col-md-4"><article class="process-card"><span>02</span><h3>Predict</h3><p>Our trained model ranks the career areas that best match your background.</p></article></div><div class="col-md-4"><article class="process-card"><span>03</span><h3>Close gaps</h3><p>See matched skills and practical suggestions for building your next capability.</p></article></div></div></section>
+</main>
+{% endblock %}
