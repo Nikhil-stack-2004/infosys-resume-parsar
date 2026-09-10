@@ -239,7 +239,7 @@ The following features are planned for future milestones:
 
 ## Author
 
-**VENNAPUSA UDAY**
+**Badham Nikhil**
 
 B.Tech Student
 
