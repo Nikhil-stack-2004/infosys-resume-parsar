@@ -4,7 +4,6 @@
 <head>
 
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>AI Job Match | Career Intelligence Platform</title>
@@ -22,7 +21,7 @@
             color: #172033;
         }
 
-        /* NAVIGATION */
+        /* ================= NAVIGATION ================= */
 
         nav {
             background: white;
@@ -50,7 +49,7 @@
             color: #2563eb;
         }
 
-        /* CONTAINER */
+        /* ================= CONTAINER ================= */
 
         .container {
             max-width: 1150px;
@@ -77,7 +76,7 @@
             font-size: 16px;
         }
 
-        /* CARDS */
+        /* ================= CARDS ================= */
 
         .card {
             background: white;
@@ -88,7 +87,7 @@
             box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
         }
 
-        /* RESUME */
+        /* ================= RESUME ================= */
 
         .resume-info {
             background: #eff6ff;
@@ -108,7 +107,7 @@
             line-height: 1.7;
         }
 
-        /* TEXTAREA */
+        /* ================= TEXTAREA ================= */
 
         .section-title {
             font-size: 21px;
@@ -137,7 +136,7 @@
             border-color: #2563eb;
         }
 
-        /* BUTTON */
+        /* ================= BUTTON ================= */
 
         button {
             margin-top: 18px;
@@ -155,7 +154,7 @@
             background: #1d4ed8;
         }
 
-        /* SCORE */
+        /* ================= SCORE ================= */
 
         .score-section {
             text-align: center;
@@ -176,7 +175,7 @@
             letter-spacing: 1px;
         }
 
-        /* PROGRESS */
+        /* ================= PROGRESS ================= */
 
         .progress-container {
             max-width: 650px;
@@ -192,12 +191,13 @@
 
         .progress-bar {
             height: 100%;
-            width: {{ job_match.match_score }}%;
+            width: 0;
             background: #2563eb;
             border-radius: 20px;
+            transition: width 0.4s ease;
         }
 
-        /* SUMMARY GRID */
+        /* ================= SUMMARY GRID ================= */
 
         .summary-grid {
             display: grid;
@@ -224,7 +224,7 @@
             font-size: 14px;
         }
 
-        /* RESULT GRID */
+        /* ================= RESULT GRID ================= */
 
         .result-grid {
             display: grid;
@@ -244,7 +244,7 @@
             margin-top: 0;
         }
 
-        /* SKILLS */
+        /* ================= SKILLS ================= */
 
         .skill {
             display: inline-block;
@@ -265,7 +265,7 @@
             color: #991b1b;
         }
 
-        /* PRIORITY */
+        /* ================= PRIORITY ================= */
 
         .priority {
             margin-top: 25px;
@@ -303,7 +303,7 @@
             color: #92400e;
         }
 
-        /* ROADMAP */
+        /* ================= ROADMAP ================= */
 
         .roadmap {
             margin-top: 25px;
@@ -333,7 +333,13 @@
             flex-shrink: 0;
         }
 
-        /* RECOMMENDATIONS */
+        .roadmap-description {
+            color: #64748b;
+            margin-top: 4px;
+            font-size: 14px;
+        }
+
+        /* ================= RECOMMENDATIONS ================= */
 
         .recommendation {
             margin-top: 25px;
@@ -351,7 +357,7 @@
             line-height: 1.5;
         }
 
-        /* FOOTER */
+        /* ================= FOOTER ================= */
 
         footer {
             text-align: center;
@@ -359,9 +365,9 @@
             color: #94a3b8;
         }
 
-        /* RESPONSIVE */
+        /* ================= RESPONSIVE ================= */
 
-        @media(max-width: 800px) {
+        @media (max-width: 800px) {
 
             .summary-grid {
                 grid-template-columns: 1fr;
@@ -394,7 +400,7 @@
 <body>
 
 
-<!-- NAVIGATION -->
+<!-- ================= NAVIGATION ================= -->
 
 <nav>
 
@@ -425,7 +431,7 @@
 </nav>
 
 
-<!-- MAIN -->
+<!-- ================= MAIN ================= -->
 
 <div class="container">
 
@@ -445,7 +451,7 @@
     </p>
 
 
-    <!-- RESUME + JOB DESCRIPTION -->
+    <!-- ================= RESUME + JOB DESCRIPTION ================= -->
 
     <div class="card">
 
@@ -490,9 +496,7 @@
 
 
         <h2 class="section-title">
-
             Paste Job Description
-
         </h2>
 
 
@@ -507,7 +511,6 @@
 
         <form method="POST">
 
-
             <textarea
                 name="job_description"
                 placeholder="Example:
@@ -520,14 +523,10 @@ Strong communication and problem solving skills are required."
 
 
             <button type="submit">
-
                 Analyze Job Match
-
             </button>
 
-
         </form>
-
 
     </div>
 
@@ -535,22 +534,18 @@ Strong communication and problem solving skills are required."
     {% if job_match %}
 
 
-    <!-- SCORE -->
+    <!-- ================= SCORE ================= -->
 
     <div class="card">
 
         <div class="score-section">
 
             <div class="score">
-
                 {{ job_match.match_score }}%
-
             </div>
 
             <div class="score-label">
-
                 JOB MATCH SCORE
-
             </div>
 
 
@@ -560,9 +555,8 @@ Strong communication and problem solving skills are required."
 
                     <div
                         class="progress-bar"
-                        style="width: {{ job_match.match_score }}%;"
-                    >
-                    </div>
+                        data-score="{{ job_match.match_score }}"
+                    ></div>
 
                 </div>
 
@@ -571,7 +565,7 @@ Strong communication and problem solving skills are required."
         </div>
 
 
-        <!-- SUMMARY -->
+        <!-- ================= SUMMARY ================= -->
 
         <div class="summary-grid">
 
@@ -579,15 +573,11 @@ Strong communication and problem solving skills are required."
             <div class="summary-card">
 
                 <div class="summary-number">
-
                     {{ job_match.job_skills | length }}
-
                 </div>
 
                 <div class="summary-label">
-
                     Job Skills Detected
-
                 </div>
 
             </div>
@@ -596,15 +586,11 @@ Strong communication and problem solving skills are required."
             <div class="summary-card">
 
                 <div class="summary-number">
-
                     {{ job_match.matching_skills | length }}
-
                 </div>
 
                 <div class="summary-label">
-
                     Matching Skills
-
                 </div>
 
             </div>
@@ -613,15 +599,11 @@ Strong communication and problem solving skills are required."
             <div class="summary-card">
 
                 <div class="summary-number">
-
                     {{ job_match.missing_skills | length }}
-
                 </div>
 
                 <div class="summary-label">
-
                     Skill Gaps
-
                 </div>
 
             </div>
@@ -632,7 +614,7 @@ Strong communication and problem solving skills are required."
     </div>
 
 
-    <!-- MATCHING / MISSING -->
+    <!-- ================= MATCHING / MISSING ================= -->
 
     <div class="card">
 
@@ -645,32 +627,24 @@ Strong communication and problem solving skills are required."
             <div class="result-box">
 
                 <h2>
-
                     ✓ Matching Skills
-
                 </h2>
 
 
                 {% if job_match.matching_skills %}
 
-
                     {% for skill in job_match.matching_skills %}
 
                         <span class="skill match">
-
                             {{ skill }}
-
                         </span>
 
                     {% endfor %}
 
-
                 {% else %}
 
                     <p>
-
                         No matching skills detected.
-
                     </p>
 
                 {% endif %}
@@ -683,32 +657,24 @@ Strong communication and problem solving skills are required."
             <div class="result-box">
 
                 <h2>
-
                     ✗ Missing Skills
-
                 </h2>
 
 
                 {% if job_match.missing_skills %}
 
-
                     {% for skill in job_match.missing_skills %}
 
                         <span class="skill missing">
-
                             {{ skill }}
-
                         </span>
 
                     {% endfor %}
 
-
                 {% else %}
 
                     <p>
-
                         No major missing skills detected.
-
                     </p>
 
                 {% endif %}
@@ -719,56 +685,62 @@ Strong communication and problem solving skills are required."
         </div>
 
 
-        <!-- JOB SKILLS -->
+        <!-- ================= JOB SKILLS ================= -->
 
-        <div
-            class="result-box"
-            style="margin-top:25px;"
-        >
+        <div class="result-box job-skills-box">
 
             <h2>
-
                 Skills Detected in Job
-
             </h2>
 
 
-            {% for skill in job_match.job_skills %}
+            {% if job_match.job_skills %}
 
-                <span class="skill">
+                {% for skill in job_match.job_skills %}
 
-                    {{ skill }}
+                    <span class="skill">
+                        {{ skill }}
+                    </span>
 
-                </span>
+                {% endfor %}
 
-            {% endfor %}
+            {% else %}
+
+                <p>
+                    No job skills detected.
+                </p>
+
+            {% endif %}
 
         </div>
 
 
-        <!-- RESUME SKILLS -->
+        <!-- ================= RESUME SKILLS ================= -->
 
-        <div
-            class="result-box"
-            style="margin-top:25px;"
-        >
+        <div class="result-box resume-skills-box">
 
             <h2>
-
                 Skills From Your Resume
-
             </h2>
 
 
-            {% for skill in job_match.resume_skills %}
+            {% if job_match.resume_skills %}
 
-                <span class="skill">
+                {% for skill in job_match.resume_skills %}
 
-                    {{ skill }}
+                    <span class="skill">
+                        {{ skill }}
+                    </span>
 
-                </span>
+                {% endfor %}
 
-            {% endfor %}
+            {% else %}
+
+                <p>
+                    No resume skills detected.
+                </p>
+
+            {% endif %}
 
         </div>
 
@@ -776,7 +748,7 @@ Strong communication and problem solving skills are required."
     </div>
 
 
-    <!-- SKILL GAP ANALYSIS -->
+    <!-- ================= SKILL GAP ANALYSIS ================= -->
 
     <div class="card">
 
@@ -803,26 +775,20 @@ Strong communication and problem solving skills are required."
                     <div class="priority-item">
 
                         <span class="priority-name">
-
                             {{ skill }}
-
                         </span>
 
 
                         {% if loop.index <= 3 %}
 
                             <span class="priority-badge high">
-
                                 HIGH PRIORITY
-
                             </span>
 
                         {% else %}
 
                             <span class="priority-badge medium">
-
                                 DEVELOP
-
                             </span>
 
                         {% endif %}
@@ -835,9 +801,7 @@ Strong communication and problem solving skills are required."
             {% else %}
 
                 <p>
-
                     No significant skill gaps detected.
-
                 </p>
 
             {% endif %}
@@ -848,7 +812,7 @@ Strong communication and problem solving skills are required."
     </div>
 
 
-    <!-- LEARNING ROADMAP -->
+    <!-- ================= LEARNING ROADMAP ================= -->
 
     {% if job_match.missing_skills %}
 
@@ -857,6 +821,7 @@ Strong communication and problem solving skills are required."
         <h2>
             🛣️ AI Learning Roadmap
         </h2>
+
 
         <p class="section-description">
 
@@ -872,27 +837,18 @@ Strong communication and problem solving skills are required."
             <div class="roadmap-step">
 
                 <div class="roadmap-number">
-
                     {{ loop.index }}
-
                 </div>
 
 
                 <div>
 
                     <strong>
-
                         Learn {{ skill }}
-
                     </strong>
 
-                    <div
-                        style="
-                        color:#64748b;
-                        margin-top:4px;
-                        font-size:14px;
-                        "
-                    >
+
+                    <div class="roadmap-description">
 
                         Build practical knowledge and add
                         a project demonstrating this skill.
@@ -912,30 +868,34 @@ Strong communication and problem solving skills are required."
     {% endif %}
 
 
-    <!-- AI RECOMMENDATIONS -->
+    <!-- ================= AI RECOMMENDATIONS ================= -->
 
     <div class="card recommendation">
 
         <h2>
-
             🤖 AI Career Recommendations
-
         </h2>
 
 
         <ul>
 
+            {% if job_match.recommendations %}
 
-            {% for recommendation in job_match.recommendations %}
+                {% for recommendation in job_match.recommendations %}
+
+                    <li>
+                        {{ recommendation }}
+                    </li>
+
+                {% endfor %}
+
+            {% else %}
 
                 <li>
-
-                    {{ recommendation }}
-
+                    Continue developing the skills identified in the job description.
                 </li>
 
-            {% endfor %}
-
+            {% endif %}
 
         </ul>
 
@@ -973,6 +933,44 @@ Strong communication and problem solving skills are required."
 </footer>
 
 
-</body>
+<!-- ================= PROGRESS BAR SCRIPT ================= -->
 
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const progressBar =
+            document.querySelector(".progress-bar");
+
+        if (!progressBar) {
+            return;
+        }
+
+        const score =
+            parseFloat(
+                progressBar.getAttribute("data-score")
+            );
+
+        if (Number.isNaN(score)) {
+            return;
+        }
+
+        const safeScore =
+            Math.max(
+                0,
+                Math.min(
+                    100,
+                    score
+                )
+            );
+
+        progressBar.style.width =
+            safeScore + "%";
+
+    });
+
+</script>
+
+
+</body>
 </html>

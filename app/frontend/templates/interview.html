@@ -217,6 +217,7 @@
         }
 
         .progress-bar {
+            width: 0;
             height: 100%;
             background: #4f46e5;
             border-radius: 10px;
@@ -658,8 +659,7 @@
                 Job Match
             </a>
 
-            <a href="/interview-coach"
-               class="active">
+            <a href="/interview-coach" class="active">
                 Interview Coach
             </a>
 
@@ -703,9 +703,7 @@
 
         <!-- ================= FLASH MESSAGES ================= -->
 
-        {% with messages = get_flashed_messages(
-            with_categories=true
-        ) %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
 
             {% if messages %}
 
@@ -789,9 +787,8 @@
 
                 <div
                     class="progress-bar"
-                    style="width: {{ progress }}%;"
-                >
-                </div>
+                    data-progress="{{ progress }}"
+                ></div>
 
             </div>
 
@@ -822,11 +819,11 @@
                     action="/interview-coach"
                 >
 
-                    <label class="answer-label"
-                           for="answer">
-
+                    <label
+                        class="answer-label"
+                        for="answer"
+                    >
                         Your Answer
-
                     </label>
 
 
@@ -852,10 +849,8 @@
                             type="submit"
                             class="submit-btn"
                         >
-
                             Submit Answer
                             &nbsp; →
-
                         </button>
 
                     </div>
@@ -1100,9 +1095,7 @@
                     href="/interview-coach?reset=1"
                     class="restart-btn"
                 >
-
                     ↻ Restart Interview
-
                 </a>
 
             </div>
@@ -1120,6 +1113,39 @@
         </div>
 
     </main>
+
+
+    <!-- ================= PROGRESS BAR SCRIPT ================= -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const progressBar =
+                document.querySelector(".progress-bar");
+
+            if (progressBar) {
+
+                const progress =
+                    progressBar.getAttribute("data-progress");
+
+                if (progress !== null) {
+
+                    const numericProgress =
+                        Math.max(
+                            0,
+                            Math.min(
+                                100,
+                                parseFloat(progress) || 0
+                            )
+                        );
+
+                    progressBar.style.width =
+                        numericProgress + "%";
+                }
+            }
+
+        });
+    </script>
 
 </body>
 </html>
