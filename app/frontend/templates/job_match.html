@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Job Match | Career Intelligence Platform</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #172033;
+        }
+
+        /* NAVIGATION */
+
+        nav {
+            background: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #172033;
+        }
+
+        nav a {
+            margin-left: 22px;
+            text-decoration: none;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            color: #2563eb;
+        }
+
+        /* CONTAINER */
+
+        .container {
+            max-width: 1150px;
+            margin: 45px auto;
+            padding: 0 25px;
+        }
+
+        .step {
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin: 0 0 10px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 35px;
+            font-size: 16px;
+        }
+
+        /* CARDS */
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
+        }
+
+        /* RESUME */
+
+        .resume-info {
+            background: #eff6ff;
+            padding: 20px;
+            border-radius: 14px;
+            margin-bottom: 28px;
+        }
+
+        .resume-name {
+            font-size: 19px;
+            font-weight: 700;
+        }
+
+        .resume-skills {
+            color: #475569;
+            margin-top: 8px;
+            line-height: 1.7;
+        }
+
+        /* TEXTAREA */
+
+        .section-title {
+            font-size: 21px;
+            margin-bottom: 8px;
+        }
+
+        .section-description {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 260px;
+            padding: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            resize: vertical;
+            font-size: 15px;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        /* BUTTON */
+
+        button {
+            margin-top: 18px;
+            padding: 15px 28px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        /* SCORE */
+
+        .score-section {
+            text-align: center;
+            padding: 35px;
+        }
+
+        .score {
+            font-size: 72px;
+            font-weight: 800;
+            color: #2563eb;
+        }
+
+        .score-label {
+            color: #64748b;
+            margin-top: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* PROGRESS */
+
+        .progress-container {
+            max-width: 650px;
+            margin: 25px auto 0;
+        }
+
+        .progress-background {
+            height: 18px;
+            background: #e2e8f0;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: {{ job_match.match_score }}%;
+            background: #2563eb;
+            border-radius: 20px;
+        }
+
+        /* SUMMARY GRID */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 25px;
+        }
+
+        .summary-card {
+            background: #f8fafc;
+            padding: 22px;
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .summary-number {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .summary-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* RESULT GRID */
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .result-box {
+            background: #f8fafc;
+            padding: 22px;
+            border-radius: 14px;
+        }
+
+        .result-box h2 {
+            font-size: 20px;
+            margin-top: 0;
+        }
+
+        /* SKILLS */
+
+        .skill {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 4px;
+            border-radius: 20px;
+            background: #e2e8f0;
+            font-size: 13px;
+        }
+
+        .match {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .missing {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* PRIORITY */
+
+        .priority {
+            margin-top: 25px;
+        }
+
+        .priority-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 17px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .priority-name {
+            font-weight: 600;
+        }
+
+        .priority-badge {
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* ROADMAP */
+
+        .roadmap {
+            margin-top: 25px;
+        }
+
+        .roadmap-step {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            padding: 16px;
+            border-left: 3px solid #2563eb;
+            background: #f8fafc;
+            margin-bottom: 10px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .roadmap-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* RECOMMENDATIONS */
+
+        .recommendation {
+            margin-top: 25px;
+            padding: 24px;
+            background: #eff6ff;
+            border-radius: 14px;
+        }
+
+        .recommendation h2 {
+            margin-top: 0;
+        }
+
+        .recommendation li {
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #94a3b8;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width: 800px) {
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav a {
+                margin: 5px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVIGATION -->
+
+<nav>
+
+    <div class="logo">
+        AI Career Platform
+    </div>
+
+    <div>
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/upload">
+            Upload Resume
+        </a>
+
+        <a href="/prediction">
+            Prediction
+        </a>
+
+        <a href="/job-match">
+            Job Match
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- MAIN -->
+
+<div class="container">
+
+
+    <div class="step">
+        STEP 04 / JOB MATCHING
+    </div>
+
+
+    <h1>
+        Match Your Resume With a Job
+    </h1>
+
+
+    <p class="subtitle">
+        AI-powered comparison of your resume against real job requirements.
+    </p>
+
+
+    <!-- RESUME + JOB DESCRIPTION -->
+
+    <div class="card">
+
+
+        <div class="resume-info">
+
+            <div class="resume-name">
+
+                Resume:
+                {{ resume_details.name }}
+
+            </div>
+
+
+            <div class="resume-skills">
+
+                {% if resume_details.skills %}
+
+                    <strong>
+                        Skills detected:
+                    </strong>
+
+                    {% if resume_details.skills is string %}
+
+                        {{ resume_details.skills }}
+
+                    {% else %}
+
+                        {{ resume_details.skills | join(", ") }}
+
+                    {% endif %}
+
+                {% else %}
+
+                    No skills detected.
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <h2 class="section-title">
+
+            Paste Job Description
+
+        </h2>
+
+
+        <p class="section-description">
+
+            Paste the complete job description below.
+            The AI will identify required skills and compare
+            them with your resume.
+
+        </p>
+
+
+        <form method="POST">
+
+
+            <textarea
+                name="job_description"
+                placeholder="Example:
+
+We are looking for a Software Developer with experience in Python, Java, SQL, Git, GitHub, REST API, Machine Learning, Cloud and Docker.
+
+Strong communication and problem solving skills are required."
+                required
+            >{{ job_description }}</textarea>
+
+
+            <button type="submit">
+
+                Analyze Job Match
+
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+
+    {% if job_match %}
+
+
+    <!-- SCORE -->
+
+    <div class="card">
+
+        <div class="score-section">
+
+            <div class="score">
+
+                {{ job_match.match_score }}%
+
+            </div>
+
+            <div class="score-label">
+
+                JOB MATCH SCORE
+
+            </div>
+
+
+            <div class="progress-container">
+
+                <div class="progress-background">
+
+                    <div
+                        class="progress-bar"
+                        style="width: {{ job_match.match_score }}%;"
+                    >
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="summary-grid">
+
+
+            <div class="summary-card">
+
+                <div class="summary-number">
+
+                    {{ job_match.job_skills | length }}
+
+                </div>
+
+                <div class="summary-label">
+
+                    Job Skills Detected
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-number">
+
+                    {{ job_match.matching_skills | length }}
+
+                </div>
+
+                <div class="summary-label">
+
+                    Matching Skills
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-number">
+
+                    {{ job_match.missing_skills | length }}
+
+                </div>
+
+                <div class="summary-label">
+
+                    Skill Gaps
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- MATCHING / MISSING -->
+
+    <div class="card">
+
+
+        <div class="result-grid">
+
+
+            <!-- MATCHING -->
+
+            <div class="result-box">
+
+                <h2>
+
+                    ✓ Matching Skills
+
+                </h2>
+
+
+                {% if job_match.matching_skills %}
+
+
+                    {% for skill in job_match.matching_skills %}
+
+                        <span class="skill match">
+
+                            {{ skill }}
+
+                        </span>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+                    <p>
+
+                        No matching skills detected.
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- MISSING -->
+
+            <div class="result-box">
+
+                <h2>
+
+                    ✗ Missing Skills
+
+                </h2>
+
+
+                {% if job_match.missing_skills %}
+
+
+                    {% for skill in job_match.missing_skills %}
+
+                        <span class="skill missing">
+
+                            {{ skill }}
+
+                        </span>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+                    <p>
+
+                        No major missing skills detected.
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+        </div>
+
+
+        <!-- JOB SKILLS -->
+
+        <div
+            class="result-box"
+            style="margin-top:25px;"
+        >
+
+            <h2>
+
+                Skills Detected in Job
+
+            </h2>
+
+
+            {% for skill in job_match.job_skills %}
+
+                <span class="skill">
+
+                    {{ skill }}
+
+                </span>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- RESUME SKILLS -->
+
+        <div
+            class="result-box"
+            style="margin-top:25px;"
+        >
+
+            <h2>
+
+                Skills From Your Resume
+
+            </h2>
+
+
+            {% for skill in job_match.resume_skills %}
+
+                <span class="skill">
+
+                    {{ skill }}
+
+                </span>
+
+            {% endfor %}
+
+        </div>
+
+
+    </div>
+
+
+    <!-- SKILL GAP ANALYSIS -->
+
+    <div class="card">
+
+        <h2>
+            🧠 AI Skill Gap Analysis
+        </h2>
+
+        <p class="section-description">
+
+            These skills are required by the job description
+            but were not detected in your resume.
+
+        </p>
+
+
+        <div class="priority">
+
+
+            {% if job_match.missing_skills %}
+
+
+                {% for skill in job_match.missing_skills %}
+
+                    <div class="priority-item">
+
+                        <span class="priority-name">
+
+                            {{ skill }}
+
+                        </span>
+
+
+                        {% if loop.index <= 3 %}
+
+                            <span class="priority-badge high">
+
+                                HIGH PRIORITY
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="priority-badge medium">
+
+                                DEVELOP
+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+
+            {% else %}
+
+                <p>
+
+                    No significant skill gaps detected.
+
+                </p>
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+
+    <!-- LEARNING ROADMAP -->
+
+    {% if job_match.missing_skills %}
+
+    <div class="card roadmap">
+
+        <h2>
+            🛣️ AI Learning Roadmap
+        </h2>
+
+        <p class="section-description">
+
+            A suggested learning sequence based on
+            the missing skills detected from this job.
+
+        </p>
+
+
+        {% for skill in job_match.missing_skills[:5] %}
+
+
+            <div class="roadmap-step">
+
+                <div class="roadmap-number">
+
+                    {{ loop.index }}
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+
+                        Learn {{ skill }}
+
+                    </strong>
+
+                    <div
+                        style="
+                        color:#64748b;
+                        margin-top:4px;
+                        font-size:14px;
+                        "
+                    >
+
+                        Build practical knowledge and add
+                        a project demonstrating this skill.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- AI RECOMMENDATIONS -->
+
+    <div class="card recommendation">
+
+        <h2>
+
+            🤖 AI Career Recommendations
+
+        </h2>
+
+
+        <ul>
+
+
+            {% for recommendation in job_match.recommendations %}
+
+                <li>
+
+                    {{ recommendation }}
+
+                </li>
+
+            {% endfor %}
+
+
+        </ul>
+
+
+        {% if job_match.missing_skills %}
+
+            <p>
+
+                <strong>
+                    Resume Improvement:
+                </strong>
+
+                Consider adding relevant projects,
+                certifications, internships, or practical
+                experience demonstrating the missing skills.
+
+            </p>
+
+        {% endif %}
+
+
+    </div>
+
+
+    {% endif %}
+
+
+</div>
+
+
+<footer>
+
+    © 2026 AI Powered Career Intelligence Platform
+
+</footer>
+
+
+</body>
+
+</html>
