@@ -1,0 +1,34 @@
+Skill Alignment Analysis
+=======================================================
+
+Dataset records: 10000
+Unique skills: 795
+Job roles: 324
+
+Mean Skill Alignment: 70.86%
+Median Skill Alignment: 70.00%
+High Alignment (>=75%): 46.84%
+Medium Alignment (50-74%): 45.23%
+Low Alignment (<50%): 7.93%
+
+Top 20 Skills:
+communication: 4374
+problem solving: 4216
+leadership: 1775
+sql: 1162
+safety: 1051
+creativity: 1048
+research: 979
+customer service: 911
+data analysis: 893
+python: 731
+project management: 727
+compliance: 720
+attention to detail: 705
+javascript: 641
+sales: 641
+technical knowledge: 640
+css: 612
+documentation: 604
+organization: 589
+decision making: 578

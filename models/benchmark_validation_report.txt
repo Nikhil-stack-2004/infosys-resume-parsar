@@ -1,0 +1,25 @@
+CAREER INTELLIGENCE BENCHMARK VALIDATION REPORT
+=================================================================
+
+1. INTERNAL DATASET
+Records: 10000
+Unique Job Roles: 324
+Records With Skills: 100.00%
+
+2. SEMANTIC MATCHING
+Top-1 Accuracy: 34.48%
+Top-3 Accuracy: 51.77%
+Top-5 Accuracy: 59.57%
+
+3. SKILL ALIGNMENT
+Mean Alignment: 70.86%
+Median Alignment: 70.00%
+High Alignment: 46.84%
+Medium Alignment: 45.23%
+Low Alignment: 7.93%
+
+4. EXTERNAL BENCHMARK STATUS
+SemEval benchmark: Not connected
+LinkedIn transition dataset: Not connected
+
+Note: Internal evaluation results must not be represented as external benchmark validation.

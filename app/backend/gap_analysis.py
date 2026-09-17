@@ -3,15 +3,39 @@ Skill Gap Analysis
 AI-Powered Career Intelligence Platform
 """
 
+import os
 import re
+import json
 
 
 # ============================================================
-# CAREER SKILL REQUIREMENTS
+# PATHS
+# ============================================================
+
+BASE_DIR = os.path.dirname(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__)
+        )
+    )
+)
+
+MODEL_DIR = os.path.join(
+    BASE_DIR,
+    "models"
+)
+
+SKILL_PROFILE_FILE = os.path.join(
+    MODEL_DIR,
+    "job_role_skill_profiles.json"
+)
+
+
+# ============================================================
+# FALLBACK CAREER SKILLS
 # ============================================================
 
 CAREER_SKILLS = {
-
     "Technology": [
         "python",
         "java",
@@ -45,6 +69,243 @@ CAREER_SKILLS = {
 
 
 # ============================================================
+# SKILL ALIASES
+# ============================================================
+
+# IMPORTANT:
+# Aliases are deliberately conservative.
+# We do NOT use broad substring matching.
+
+SKILL_ALIASES = {
+
+    "github": [
+        "github",
+        "git"
+    ],
+
+    "git": [
+        "git",
+        "github"
+    ],
+
+    "mysql": [
+        "mysql",
+        "sql"
+    ],
+
+    "postgresql": [
+        "postgresql",
+        "postgres",
+        "sql"
+    ],
+
+    "postgres": [
+        "postgres",
+        "postgresql",
+        "sql"
+    ],
+
+    "oracle": [
+        "oracle",
+        "sql"
+    ],
+
+    "sql": [
+        "sql",
+        "mysql",
+        "postgres",
+        "postgresql",
+        "oracle"
+    ],
+
+    "api": [
+        "api",
+        "apis",
+        "rest api",
+        "rest apis"
+    ],
+
+    "apis": [
+        "api",
+        "apis",
+        "rest api",
+        "rest apis"
+    ],
+
+    "rest api": [
+        "rest api",
+        "rest apis",
+        "api",
+        "apis"
+    ],
+
+    "rest apis": [
+        "rest apis",
+        "rest api",
+        "api",
+        "apis"
+    ],
+
+    "machine learning": [
+        "machine learning",
+        "ml"
+    ],
+
+    "ml": [
+        "ml",
+        "machine learning"
+    ],
+
+    "deep learning": [
+        "deep learning",
+        "dl"
+    ],
+
+    "dl": [
+        "dl",
+        "deep learning"
+    ],
+
+    "data analysis": [
+        "data analysis",
+        "data analytics"
+    ],
+
+    "data analytics": [
+        "data analytics",
+        "data analysis"
+    ],
+
+    "problem solving": [
+        "problem solving",
+        "problem-solving",
+        "problem solving skills"
+    ],
+
+    "communication": [
+        "communication",
+        "communication skills"
+    ],
+
+    "excel": [
+        "excel",
+        "microsoft excel"
+    ],
+
+    "microsoft excel": [
+        "microsoft excel",
+        "excel"
+    ],
+
+    "cloud": [
+        "cloud"
+    ],
+
+    "aws": [
+        "aws"
+    ],
+
+    "azure": [
+        "azure"
+    ],
+
+    "gcp": [
+        "gcp"
+    ],
+
+    "testing": [
+        "testing",
+        "software testing",
+        "selenium"
+    ],
+
+    "software testing": [
+        "software testing",
+        "testing",
+        "selenium"
+    ],
+
+    "selenium": [
+        "selenium",
+        "testing"
+    ],
+
+    "python": [
+        "python"
+    ],
+
+    "java": [
+        "java"
+    ],
+
+    "c": [
+        "c",
+        "c programming",
+        "c language"
+    ],
+
+    "csharp": [
+        "csharp",
+        "c#"
+    ],
+
+    "cpp": [
+        "cpp",
+        "c++"
+    ],
+
+    "c++": [
+        "c++",
+        "cpp"
+    ]
+}
+
+
+# ============================================================
+# LOAD TRAINED JOB ROLE SKILL PROFILES
+# ============================================================
+
+def load_skill_profiles():
+
+    if not os.path.exists(
+        SKILL_PROFILE_FILE
+    ):
+        print(
+            "Warning: job_role_skill_profiles.json not found."
+        )
+        return {}
+
+    try:
+
+        with open(
+            SKILL_PROFILE_FILE,
+            "r",
+            encoding="utf-8"
+        ) as file:
+
+            data = json.load(file)
+
+        if isinstance(data, dict):
+
+            print(
+                f"Loaded {len(data)} job-role skill profiles."
+            )
+
+            return data
+
+    except Exception as error:
+
+        print(
+            f"Warning: Could not load skill profiles: {error}"
+        )
+
+    return {}
+
+
+JOB_ROLE_SKILL_PROFILES = load_skill_profiles()
+
+
+# ============================================================
 # NORMALIZE TEXT
 # ============================================================
 
@@ -55,6 +316,16 @@ def normalize_text(value):
 
     value = str(value).lower()
 
+    value = value.replace(
+        "_",
+        " "
+    )
+
+    value = value.replace(
+        "-",
+        " "
+    )
+
     value = re.sub(
         r"\s+",
         " ",
@@ -62,6 +333,124 @@ def normalize_text(value):
     )
 
     return value.strip()
+
+
+# ============================================================
+# NORMALIZE SKILL
+# ============================================================
+
+def normalize_skill(skill):
+
+    skill = normalize_text(
+        skill
+    )
+
+    replacements = {
+        "c plus plus": "cpp",
+        "c sharp": "csharp",
+        "c #": "csharp",
+        "microsoft excel": "excel"
+    }
+
+    if skill in replacements:
+        skill = replacements[skill]
+
+    skill = re.sub(
+        r"\s+",
+        " ",
+        skill
+    )
+
+    return skill.strip()
+
+
+# ============================================================
+# SPLIT SKILL STRING
+# ============================================================
+
+def split_skill_string(text):
+
+    text = normalize_text(
+        text
+    )
+
+    if not text:
+        return []
+
+    # Multi-word skills must be detected first.
+    multi_word_skills = [
+        "machine learning",
+        "deep learning",
+        "data analysis",
+        "data analytics",
+        "power bi",
+        "problem solving",
+        "artificial intelligence",
+        "rest api",
+        "rest apis",
+        "computer vision",
+        "natural language processing",
+        "database management",
+        "web development",
+        "software development",
+        "software testing",
+        "user interface",
+        "user experience",
+        "technical knowledge",
+        "attention to detail",
+        "mobile development",
+        "android development",
+        "business acumen",
+        "business development",
+        "java interop",
+        "penetration testing",
+        "scikit learn",
+        "mobile ui"
+    ]
+
+    found = []
+
+    # Sort longest first.
+    multi_word_skills.sort(
+        key=len,
+        reverse=True
+    )
+
+    for skill in multi_word_skills:
+
+        pattern = (
+            r"(?<!\w)"
+            + re.escape(skill)
+            + r"(?!\w)"
+        )
+
+        if re.search(
+            pattern,
+            text
+        ):
+
+            found.append(
+                skill
+            )
+
+            text = re.sub(
+                pattern,
+                " ",
+                text
+            )
+
+    # Remaining single-word skills.
+    text = re.sub(
+        r"[,|;/]+",
+        " ",
+        text
+    )
+
+    found.extend(
+        text.split()
+    )
+
+    return found
 
 
 # ============================================================
@@ -74,55 +463,221 @@ def normalize_resume_skills(skills):
         return set()
 
     # --------------------------------------------------------
-    # List format
+    # Convert input into list
     # --------------------------------------------------------
 
-    if isinstance(skills, list):
+    if isinstance(
+        skills,
+        (list, tuple, set)
+    ):
 
-        text = " ".join(
-            normalize_text(skill)
-            for skill in skills
+        values = list(
+            skills
         )
-
-    # --------------------------------------------------------
-    # String format
-    # --------------------------------------------------------
 
     else:
 
-        text = normalize_text(skills)
+        values = split_skill_string(
+            skills
+        )
 
-    # Replace separators
+    # --------------------------------------------------------
+    # Normalize
+    # --------------------------------------------------------
 
-    text = text.replace(",", " ")
-    text = text.replace("|", " ")
-    text = text.replace(";", " ")
-    text = text.replace("/", " ")
+    normalized = set()
 
-    words = set(
-        text.split()
+    for skill in values:
+
+        skill = normalize_skill(
+            skill
+        )
+
+        if skill:
+            normalized.add(
+                skill
+            )
+
+    return normalized
+
+
+# ============================================================
+# EXTRACT SKILLS FROM ROLE PROFILE
+# ============================================================
+
+def extract_profile_skills(profile):
+
+    if isinstance(
+        profile,
+        list
+    ):
+        return profile
+
+    if isinstance(
+        profile,
+        tuple
+    ):
+        return list(profile)
+
+    if isinstance(
+        profile,
+        set
+    ):
+        return list(profile)
+
+    if isinstance(
+        profile,
+        str
+    ):
+        return [
+            profile
+        ]
+
+    if isinstance(
+        profile,
+        dict
+    ):
+
+        possible_keys = [
+            "skills",
+            "required_skills",
+            "skill",
+            "skill_profile",
+            "top_skills"
+        ]
+
+        for key in possible_keys:
+
+            if key in profile:
+
+                value = profile[key]
+
+                if isinstance(
+                    value,
+                    dict
+                ):
+                    return list(
+                        value.keys()
+                    )
+
+                if isinstance(
+                    value,
+                    list
+                ):
+                    return value
+
+                if isinstance(
+                    value,
+                    str
+                ):
+                    return [
+                        value
+                    ]
+
+        return list(
+            profile.keys()
+        )
+
+    return []
+
+
+# ============================================================
+# FIND SKILLS FOR PREDICTED ROLE
+# ============================================================
+
+def get_role_skills(career):
+
+    if not career:
+        return []
+
+    career_text = normalize_text(
+        career
     )
 
     # --------------------------------------------------------
-    # Also keep complete multi-word skills
+    # Exact role match
     # --------------------------------------------------------
 
-    for skill in [
-        "machine learning",
-        "deep learning",
-        "data analysis",
-        "data analytics",
-        "power bi",
-        "problem solving",
-        "artificial intelligence",
-        "rest api"
-    ]:
+    for role, profile in JOB_ROLE_SKILL_PROFILES.items():
 
-        if skill in text:
+        if normalize_text(
+            role
+        ) == career_text:
 
-            words.add(skill)
+            skills = extract_profile_skills(
+                profile
+            )
 
-    return words
+            if skills:
+                return skills
+
+    # --------------------------------------------------------
+    # Partial role match
+    # --------------------------------------------------------
+
+    for role, profile in JOB_ROLE_SKILL_PROFILES.items():
+
+        role_text = normalize_text(
+            role
+        )
+
+        if (
+            career_text in role_text
+            or role_text in career_text
+        ):
+
+            skills = extract_profile_skills(
+                profile
+            )
+
+            if skills:
+                return skills
+
+    # --------------------------------------------------------
+    # Generic fallback
+    # --------------------------------------------------------
+
+    normalized_career = normalize_career_name(
+        career
+    )
+
+    return CAREER_SKILLS.get(
+        normalized_career,
+        []
+    )
+
+
+# ============================================================
+# GET ACCEPTED SKILLS
+# ============================================================
+
+def get_accepted_skill_set(required_skill):
+
+    required_skill = normalize_skill(
+        required_skill
+    )
+
+    accepted = {
+        required_skill
+    }
+
+    aliases = SKILL_ALIASES.get(
+        required_skill,
+        []
+    )
+
+    for alias in aliases:
+
+        alias = normalize_skill(
+            alias
+        )
+
+        if alias:
+            accepted.add(
+                alias
+            )
+
+    return accepted
 
 
 # ============================================================
@@ -133,101 +688,43 @@ def skill_exists(
     resume_skills,
     required_skill
 ):
+    """
+    Strict skill matching.
 
-    required_skill = normalize_text(
+    Allowed:
+        Exact normalized match
+        Explicit alias match
+
+    Not allowed:
+        Broad substring matching
+
+    This prevents:
+        machine learning -> cnc machines
+        machine learning -> market research
+        machine learning -> technical knowledge
+    """
+
+    required_skill = normalize_skill(
         required_skill
     )
 
-    # Exact match
+    if not required_skill:
+        return False
 
+    # Exact match
     if required_skill in resume_skills:
         return True
 
-    # Check inside complete resume skill text
-
-    resume_text = " ".join(
-        resume_skills
+    # Explicit aliases only
+    accepted_skills = get_accepted_skill_set(
+        required_skill
     )
 
-    if required_skill in resume_text:
-        return True
-
-    # Aliases
-
-    aliases = {
-
-        "apis": [
-            "api",
-            "apis",
-            "rest api",
-            "rest apis"
-        ],
-
-        "cloud": [
-            "cloud",
-            "aws",
-            "azure",
-            "gcp"
-        ],
-
-        "git": [
-            "git",
-            "github"
-        ],
-
-        "sql": [
-            "sql",
-            "mysql",
-            "postgresql",
-            "oracle"
-        ],
-
-        "testing": [
-            "testing",
-            "selenium"
-        ],
-
-        "python": [
-            "python"
-        ],
-
-        "java": [
-            "java"
-        ],
-
-        "excel": [
-            "excel"
-        ],
-
-        "communication": [
-            "communication"
-        ],
-
-        "problem solving": [
-            "problem solving",
-            "problem-solving"
-        ],
-
-        "data analysis": [
-            "data analysis",
-            "data analytics"
-        ]
-    }
-
-    for alias in aliases.get(
-        required_skill,
-        []
-    ):
-
-        if alias in resume_skills:
-
-            return True
-
-        if alias in resume_text:
-
-            return True
-
-    return False
+    return bool(
+        accepted_skills.intersection(
+            resume_skills
+        )
+    )
 
 
 # ============================================================
@@ -239,15 +736,39 @@ def calculate_career_gap(
     career
 ):
 
-    required_skills = CAREER_SKILLS.get(
-        career,
-        []
+    # Normalize resume skills.
+    resume_skills = normalize_resume_skills(
+        resume_skills
     )
 
+    # Get role-specific skills.
+    required_skills = get_role_skills(
+        career
+    )
+
+    # Normalize required skills.
+    normalized_required = []
+
+    for skill in required_skills:
+
+        skill = normalize_skill(
+            skill
+        )
+
+        if (
+            skill
+            and skill not in normalized_required
+        ):
+
+            normalized_required.append(
+                skill
+            )
+
+    # Compare.
     matching_skills = []
     missing_skills = []
 
-    for skill in required_skills:
+    for skill in normalized_required:
 
         if skill_exists(
             resume_skills,
@@ -264,8 +785,12 @@ def calculate_career_gap(
                 skill
             )
 
+    # --------------------------------------------------------
+    # Readiness
+    # --------------------------------------------------------
+
     total = len(
-        required_skills
+        normalized_required
     )
 
     if total > 0:
@@ -282,21 +807,32 @@ def calculate_career_gap(
 
         readiness = 0.0
 
-    return {
+    # --------------------------------------------------------
+    # Recommendations
+    # --------------------------------------------------------
 
-        "career": career,
+    recommendations = []
 
-        "readiness": readiness,
+    for skill in missing_skills[:8]:
 
-        "matching_skills": matching_skills,
+        recommendations.append(
+            f"Develop {skill} skills through "
+            f"a practical {career} project."
+        )
 
-        "missing_skills": missing_skills,
+    if not recommendations:
 
-        "recommendations": [
-            f"Build a small {career} project "
-            f"that demonstrates {skill}."
-            for skill in missing_skills[:8]
+        recommendations = [
+            "Your current resume skills cover "
+            f"the main skills identified for {career}."
         ]
+
+    return {
+        "career": career,
+        "readiness": readiness,
+        "matching_skills": matching_skills,
+        "missing_skills": missing_skills,
+        "recommendations": recommendations
     }
 
 
@@ -307,10 +843,6 @@ def calculate_career_gap(
 def get_prediction_name(
     prediction
 ):
-
-    # --------------------------------------------------------
-    # Dictionary prediction
-    # --------------------------------------------------------
 
     if isinstance(
         prediction,
@@ -339,10 +871,6 @@ def get_prediction_name(
                     value
                 ).strip()
 
-    # --------------------------------------------------------
-    # String prediction
-    # --------------------------------------------------------
-
     if isinstance(
         prediction,
         str
@@ -368,35 +896,32 @@ def normalize_career_name(
         career
     )
 
-    # Technology
-
-    if (
-        "technology" in text
-        or "tech" in text
-        or "software" in text
-        or "developer" in text
-        or "engineering" in text
-    ):
+    if text in [
+        "technology",
+        "tech"
+    ]:
 
         return "Technology"
 
-    # Data
-
-    if (
-        "data" in text
-        or "analytics" in text
-        or "analyst" in text
-    ):
+    if text in [
+        "data",
+        "data analytics",
+        "data & analytics",
+        "analytics"
+    ]:
 
         return "Data & Analytics"
 
-    # Consulting
-
-    if "consult" in text:
+    if text in [
+        "consulting",
+        "consultant"
+    ]:
 
         return "Consulting"
 
-    return career.strip()
+    return str(
+        career
+    ).strip()
 
 
 # ============================================================
@@ -408,14 +933,20 @@ def build_gap_reports(
     predictions
 ):
 
+    # Normalize resume skills once.
     resume_skills = normalize_resume_skills(
         skills
+    )
+
+    print(
+        "Normalized resume skills:",
+        sorted(resume_skills)
     )
 
     careers = []
 
     # --------------------------------------------------------
-    # Extract predicted careers
+    # Prediction list
     # --------------------------------------------------------
 
     if isinstance(
@@ -439,13 +970,14 @@ def build_gap_reports(
                     career
                 )
 
+    # --------------------------------------------------------
+    # Prediction dictionary
+    # --------------------------------------------------------
+
     elif isinstance(
         predictions,
         dict
     ):
-
-        # Case 1:
-        # {"Technology": 89.8, ...}
 
         for key in predictions.keys():
 
@@ -474,9 +1006,7 @@ def build_gap_reports(
             )
 
     # --------------------------------------------------------
-    # IMPORTANT:
-    # If predictor returned unexpected format,
-    # use the three platform careers.
+    # Fallback
     # --------------------------------------------------------
 
     if not unique_careers:
@@ -500,41 +1030,14 @@ def build_gap_reports(
             career
         )
 
-        missing_skills = result[
-            "missing_skills"
-        ]
-
-        recommendations = result[
-            "recommendations"
-        ]
-
-        # ----------------------------------------------------
-        # No missing skills
-        # ----------------------------------------------------
-
-        if not missing_skills:
-
-            recommendations = [
-                "Your current resume skills "
-                f"cover the main skills required "
-                f"for {career}."
-            ]
-
-        reports.append({
-
-            "career": career,
-
-            "readiness": result[
-                "readiness"
-            ],
-
-            "matching_skills": result[
-                "matching_skills"
-            ],
-
-            "missing_skills": missing_skills,
-
-            "recommendations": recommendations
-        })
+        reports.append(
+            {
+                "career": result["career"],
+                "readiness": result["readiness"],
+                "matching_skills": result["matching_skills"],
+                "missing_skills": result["missing_skills"],
+                "recommendations": result["recommendations"]
+            }
+        )
 
     return reports

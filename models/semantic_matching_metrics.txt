@@ -1,0 +1,10 @@
+Sentence-BERT Semantic Matching Results
+=======================================================
+
+Model: all-MiniLM-L6-v2
+Dataset records: 10000
+Unique job roles: 324
+
+Top-1 Accuracy: 34.48%
+Top-3 Accuracy: 51.77%
+Top-5 Accuracy: 59.57%

@@ -2,17 +2,30 @@ import re
 import os
 import joblib
 
+
 # -----------------------------------
 # Load Education Encoder
 # -----------------------------------
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__)
+        )
+    )
+)
 
-MODEL_DIR = os.path.join(BASE_DIR, "models")
+MODEL_DIR = os.path.join(
+    BASE_DIR,
+    "models"
+)
 
 education_encoder = joblib.load(
-    os.path.join(MODEL_DIR, "education_onehot_encoder.pkl")
-) 
+    os.path.join(
+        MODEL_DIR,
+        "education_onehot_encoder.pkl"
+    )
+)
 
 EDUCATION_CATEGORIES = education_encoder.categories_[0]
 
@@ -20,21 +33,26 @@ EDUCATION_CATEGORIES = education_encoder.categories_[0]
 # -----------------------------------
 # Education Extraction
 # -----------------------------------
+
 def extract_education(resume_text):
 
     text = resume_text.lower()
 
     # Computer Science
-    if ("b.tech" in text or
-        "btech" in text or
-        "b.e" in text or
-        "computer science" in text):
+    if (
+        "b.tech" in text
+        or "btech" in text
+        or "b.e" in text
+        or "computer science" in text
+    ):
         return "Bachelor's in Computer Science"
 
     # Information Technology
-    elif ("information technology" in text or
-          "bachelor of it" in text or
-          "bachelor in it" in text):
+    elif (
+        "information technology" in text
+        or "bachelor of it" in text
+        or "bachelor in it" in text
+    ):
         return "Bachelor's in IT"
 
     # Business
@@ -60,8 +78,11 @@ def extract_education(resume_text):
     elif "electronics engineering" in text:
         return "Bachelor's in Electronics Engineering"
 
-    # AI
-    elif "artificial intelligence" in text or "aiml" in text:
+    # Artificial Intelligence
+    elif (
+        "artificial intelligence" in text
+        or "aiml" in text
+    ):
         return "Bachelor's in Computer Science"
 
     # Data Science
@@ -69,10 +90,13 @@ def extract_education(resume_text):
         return "Master's in Data Science"
 
     # High School / Intermediate
-    elif "high school" in text or "intermediate" in text:
+    elif (
+        "high school" in text
+        or "intermediate" in text
+    ):
         return "High School"
 
-    return "High School" 
+    return "High School"
 
 
 # -----------------------------------
@@ -83,23 +107,37 @@ def extract_experience_years(resume_text):
 
     text = resume_text.lower()
 
-    pattern = r'(\d+)\+?\s*years?'
+    pattern = r"(\d+)\+?\s*years?"
 
-    match = re.search(pattern, text)
+    match = re.search(
+        pattern,
+        text
+    )
 
     if match:
-        return int(match.group(1))
+        return int(
+            match.group(1)
+        )
 
     return 0
+
+
 # -----------------------------------
 # Email Extraction
 # -----------------------------------
 
 def extract_email(resume_text):
 
-    pattern = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+    pattern = (
+        r"[a-zA-Z0-9._%+-]+"
+        r"@[a-zA-Z0-9.-]+"
+        r"\.[a-zA-Z]{2,}"
+    )
 
-    match = re.search(pattern, resume_text)
+    match = re.search(
+        pattern,
+        resume_text
+    )
 
     if match:
         return match.group()
@@ -115,12 +153,16 @@ def extract_phone(resume_text):
 
     pattern = r"(?:\+91[-\s]?)?[6-9]\d{9}"
 
-    match = re.search(pattern, resume_text)
+    match = re.search(
+        pattern,
+        resume_text
+    )
 
     if match:
         return match.group()
 
     return ""
+
 
 # -----------------------------------
 # Skills Extraction
@@ -160,7 +202,11 @@ SKILLS = [
 
 ]
 
+
 def extract_skills(resume_text):
+
+    if not resume_text:
+        return []
 
     text = resume_text.lower()
 
@@ -168,7 +214,20 @@ def extract_skills(resume_text):
 
     for skill in SKILLS:
 
-        if skill in text:
-            found_skills.append(skill)
+        pattern = (
+            r"\b"
+            + re.escape(skill)
+            + r"\b"
+        )
 
-    return " ".join(found_skills)
+        if re.search(
+            pattern,
+            text
+        ):
+            found_skills.append(
+                skill
+            )
+
+    return sorted(
+        set(found_skills)
+    )

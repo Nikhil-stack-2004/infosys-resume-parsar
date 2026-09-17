@@ -1,0 +1,340 @@
+LOGISTIC REGRESSION TRAINING REPORT
+============================================================
+
+Dataset records: 10000
+Unique job roles: 324
+Training records: 8000
+Testing records: 2000
+Resume TF-IDF features: 5000
+Skills TF-IDF features: 3000
+Education features: 257
+Total model features: 8258
+Model classes: 324
+Test accuracy: 99.95%
+
+JOB ROLE CLASSES
+------------------------------------------------------------
+0: 3D Artist
+1: AI/ML Specialist
+2: AR/VR Developer
+3: Academic Advisor
+4: Academic Data Analyst
+5: Account Executive
+6: Accountant
+7: Administrative Assistant
+8: Aerospace Engineer
+9: Agricultural Engineer
+10: Analytics Engineer
+11: Angular Developer
+12: Animator
+13: Announcer
+14: Architect
+15: Archivist
+16: Art Director
+17: Athlete
+18: Athletic Trainer
+19: Audit Manager
+20: Automotive Engineer
+21: BI Analyst
+22: BI Developer
+23: Backend Developer
+24: Bartender
+25: Biomedical Engineer
+26: Blockchain Developer
+27: Botanist
+28: Broadcast Technician
+29: Budget Analyst
+30: Bus Driver
+31: Business Analyst
+32: Business Consultant
+33: Business Development Manager
+34: C# Developer
+35: C++ Developer
+36: CFO
+37: CMO
+38: CNC Machinist
+39: COO
+40: Call Center Manager
+41: Carpenter
+42: Cashier
+43: Cassandra Developer
+44: Chef
+45: Chemical Engineer
+46: Chief Executive Officer
+47: Chief Marketing Officer
+48: Chief People Officer
+49: Civil Engineer
+50: Clinical Data Manager
+51: Clinical Lab Scientist
+52: Clojure Developer
+53: Cloud Architect
+54: Coach
+55: College Professor
+56: Community Outreach Coordinator
+57: Compensation & Benefits Manager
+58: Compliance Officer
+59: Conservation Officer
+60: Conservator
+61: Construction Manager
+62: Content Creator
+63: Content Marketing Manager
+64: Controller
+65: Copywriter
+66: Corporate Lawyer
+67: Counselor
+68: Crane Operator
+69: Creative Director
+70: Customer Service Representative
+71: Customer Success Manager
+72: Cybersecurity Analyst
+73: Cybersecurity Specialist
+74: Dairy Manager
+75: Data Analyst
+76: Data Engineer
+77: Data Scientist
+78: Data Warehouse Architect
+79: Database Administrator
+80: Deck Officer
+81: Delivery Driver
+82: Demand Planner
+83: Dentist
+84: Detective
+85: DevOps Engineer
+86: DevSecOps Engineer
+87: Diesel Mechanic
+88: Digital Marketing Manager
+89: Director
+90: Drupal Developer
+91: ETL Developer
+92: Editor
+93: Elasticsearch Developer
+94: Electrical Engineer
+95: Electrical Utilities Manager
+96: Electrician
+97: Electronics Engineer
+98: Elixir Developer
+99: Email Marketing Specialist
+100: Embedded Systems Engineer
+101: Enterprise Architect
+102: Environmental Engineer
+103: Environmental Scientist
+104: Esthetician
+105: Ethical Hacker
+106: Event Coordinator
+107: Executive Assistant
+108: Exhibition Designer
+109: Farm Manager
+110: Farmer
+111: Financial Analyst
+112: Firefighter
+113: Fitness Manager
+114: Fleet Manager
+115: Food Scientist
+116: Frontend Developer
+117: Full Stack Developer
+118: Fundraiser
+119: Game Developer
+120: General Manager
+121: Geologist
+122: Go Developer
+123: Government Analyst
+124: Grant Writer
+125: Graphic Designer
+126: HR Business Partner
+127: HR Consultant
+128: HR Manager
+129: HR Operations Manager
+130: HVAC Technician
+131: Hadoop Developer
+132: Hairstylist
+133: Haskell Developer
+134: Head Chef
+135: Healthcare Administrator
+136: Heavy Equipment Operator
+137: Hotel Manager
+138: IT Consultant
+139: IT Field Technician
+140: IT Help Desk Technician
+141: IT Project Manager
+142: Informatica Developer
+143: Instructional Designer
+144: Investment Banking Analyst
+145: IoT Engineer
+146: Java Backend Developer
+147: Joomla Developer
+148: Journalist
+149: Judge
+150: Jupyter Developer
+151: Kafka Developer
+152: Kotlin Developer
+153: Laboratory Manager
+154: Landscape Architect
+155: Law Clerk
+156: Lawyer
+157: Learning & Development Manager
+158: Legal Secretary
+159: Librarian
+160: Line Cook
+161: Livestock Manager
+162: Logistics Manager
+163: Looker Developer
+164: Loss Prevention Manager
+165: MATLAB Developer
+166: Machine Learning Engineer
+167: Magento Developer
+168: Makeup Artist
+169: Management Consultant
+170: Manufacturing Engineer
+171: Marketing Director
+172: Marketing Manager
+173: Massage Therapist
+174: Mechanic
+175: Mechanical Engineer
+176: Medical Technologist
+177: Meteorologist
+178: Microbiologist
+179: Military Officer
+180: Mobile Developer Android
+181: Mobile Developer iOS
+182: MongoDB Developer
+183: Museum Curator
+184: Nail Technician
+185: Network Engineer
+186: News Anchor
+187: Non-profit Director
+188: Nurse
+189: Nursing Manager
+190: Nutritionist
+191: Occupational Therapist
+192: Office Manager
+193: Operations Manager
+194: Oracle Applications Developer
+195: Oracle DBA
+196: PHP Developer
+197: Paralegal
+198: Park Ranger
+199: Pastry Chef
+200: Patent Attorney
+201: Performance Tester
+202: Perl Developer
+203: Personal Trainer
+204: Pharmacist
+205: Photographer
+206: Physical Therapist
+207: Physician
+208: Pilot
+209: Plumber
+210: Police Officer
+211: Policy Advisor
+212: Power BI Developer
+213: Pre-Sales Engineer
+214: Privacy Officer
+215: Process Improvement Manager
+216: Procurement Manager
+217: Producer
+218: Product Manager
+219: Product Marketing Manager
+220: Product Owner
+221: Product Researcher
+222: Production Manager
+223: Project Engineer
+224: Project Manager
+225: Psychiatrist
+226: Psychologist
+227: Public Administrator
+228: Python Developer
+229: QA Engineer
+230: Qlik Developer
+231: Quality Assurance Manager
+232: R Programmer
+233: Radio Host
+234: Radiographer
+235: React Developer
+236: Real Estate Agent
+237: Real Estate Broker
+238: Receptionist
+239: Redis Developer
+240: Registered Nurse
+241: Release Manager
+242: Research Scientist
+243: Restaurant Manager
+244: Retail Manager
+245: Retail Supervisor
+246: Ruby Developer
+247: Rust Developer
+248: SAP Developer
+249: SAS Programmer
+250: SEO Specialist
+251: SOC Analyst
+252: Safety Engineer
+253: Sales Associate
+254: Sales Executive
+255: Sales Manager
+256: Salesforce Administrator
+257: Salesforce Developer
+258: Scala Developer
+259: School Principal
+260: Scrum Master
+261: Security Engineer
+262: Security Guard
+263: Security Tester
+264: Server
+265: Shell Script Developer
+266: Ship Captain
+267: Shopify Developer
+268: Social Media Content Creator
+269: Social Media Manager
+270: Social Worker
+271: Software Architect
+272: Software Engineer
+273: Software Test Engineer
+274: Solution Architect
+275: Solutions Engineer
+276: Sound Engineer
+277: Sous Chef
+278: Spark Developer
+279: Sports Agent
+280: Sports Commentator
+281: Sports Manager
+282: Store Manager
+283: Strategy Consultant
+284: Structural Engineer
+285: Supply Chain Manager
+286: Surgeon
+287: Sustainability Consultant
+288: Swift Developer
+289: Systems Administrator
+290: Tableau Specialist
+291: Talend Developer
+292: Talent Acquisition Specialist
+293: Tax Attorney
+294: Tax Specialist
+295: Taxi Driver
+296: Teacher
+297: Technical Account Manager
+298: Technical Lead
+299: Technical Support Specialist
+300: Technical Writer
+301: Tour Guide
+302: Training Manager
+303: Training Specialist
+304: Travel Agent
+305: Truck Driver
+306: TypeScript Developer
+307: UI Designer
+308: UX Designer
+309: Veterinarian
+310: Veterinary Technician
+311: Vice President
+312: Video Editor
+313: Videographer
+314: Visual Merchandiser
+315: Vue Developer
+316: Warehouse Manager
+317: Water Treatment Operator
+318: Web Designer
+319: Website Administrator
+320: Welder
+321: Wildlife Biologist
+322: WordPress Developer
+323: Writer

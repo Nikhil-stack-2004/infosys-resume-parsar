@@ -1,0 +1,7 @@
+Logistic Regression Hyperparameter Tuning
+==================================================
+
+Baseline Test Accuracy: 99.95%
+Best Parameters: {'C': 2.0}
+Best CV Accuracy: 99.94%
+Best Model Test Accuracy: 99.95%
